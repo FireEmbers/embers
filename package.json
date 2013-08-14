@@ -1,0 +1,28 @@
+{
+  "name": "demoAPI",
+  "version": "0.1.0",
+  "description": "Embers demo API",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap tests/test*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/FireEmbers/demoAPI.git"
+  },
+  "keywords": [
+    "embers",
+    "api",
+    "wildfire",
+    "forecast"
+  ],
+  "author": "CrowdProcess",
+  "license": "MIT",
+  "readmeFilename": "Readme.md",
+  "gitHead": "74d4da5cb5b6c75fa8b2a9df70521a9f126a174c",
+  "dependencies": {
+    "gisClient": "git+ssh://git@github.com:FireEmbers/gisclient.git",
+    "embersengine": "git://github.com/FireEmbers/EmberEngine.git",
+    "cconv": "~0.1.0"
+  }
+}
