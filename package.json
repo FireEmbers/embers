@@ -23,6 +23,8 @@
   "dependencies": {
     "gisClient": "git+ssh://git@github.com:FireEmbers/gisclient.git",
     "embersengine": "git://github.com/FireEmbers/EmberEngine.git",
-    "cconv": "~0.1.0"
+    "cconv": "~0.1.0",
+    "embersutils": "git://github.com/FireEmbers/utils.git",
+    "ignMapToKml": "git://github.com/FireEmbers/ignToKml.git"
   }
 }

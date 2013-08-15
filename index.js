@@ -1,19 +1,22 @@
-module.exports = function(ignitionPt, U, alpha, callback){
+var engine = require('embersengine');
+var getGisMap = require('gisClient');
+var cconv = require('cconv');
+var ignToKml = require('ignMapToKml');
 
-  var engine = require('embersengine');
-  var getGisMap = require('gisClient');
-  var cconv = require('cconv');
+module.exports = function(ignitionPt, U, std, alpha, callback){
 
-  var rows = 10;
-  var cols = 10;
+  var rows = 20;
+  var cols = 20;
 
-  var length = 4000;
+  var height = 4000;
   var width = 4000;
+
+  var moisture = 5; //percentage 
 
   //compute boundaries in ETRS89 LAEA (srid 3035)
   //to pass to the postgis client 
-  var boundaries = computeBoundaries(ignitionPt, rows, cols, length,  width);
-  function computeBoundaries(cA, rows, cols, length, width){
+  var boundaries = computeBoundaries(ignitionPt, rows, cols, height, width);
+  function computeBoundaries(cA, rows, cols, height, width){
 
     var sridA = 4258;
     var sridB = 3035;
@@ -22,10 +25,10 @@ module.exports = function(ignitionPt, U, alpha, callback){
 
     cB = cconv(sridA, sridB, cA, f);
 
-    var W = cB[0] - length/2;
-    var E = cB[0] + length/2;
-    var N = cB[1] + width/2;
-    var S = cB[1] - width/2;
+    var W = cB[0] - width/2;
+    var E = cB[0] + width/2;
+    var N = cB[1] + height/2;
+    var S = cB[1] - height/2;
 
     var boundaries = {
       north: N,
@@ -42,7 +45,10 @@ module.exports = function(ignitionPt, U, alpha, callback){
   var clcMap;
   var aspectMap;
   var slopeMap;
+  var ignMaps = new Array(3);
+
   getClcMap();
+
   function getClcMap(){
 
     getGisMap(boundaries, 'postgis', onClcMap);
@@ -65,16 +71,56 @@ module.exports = function(ignitionPt, U, alpha, callback){
       aspectMap = terrainMaps["aspect"];
       slopeMap = terrainMaps["slope"];
 
+      computeIgnMaps();
+
     }
   }
 
+  function computeIgnMaps(){
 
-  // var clcMaps;
-  // postgisClient
 
-  // var var
+    //dataUnits array has 3 sub arrays, each for a different cenario of wind speed
+    //Each data Unit is [% moisture, Wind Speed in m/s, wind direction degrees clockwise from north]
 
-  // aspect dataUnit 
-  // function Run()
+    Uavg = U;
+    Umax = U*(1+std/100);
+    Umin = (U*(1-std/100) >= 0) ? U*(1-std/100): 0;
+    var dataUnits = [
+      [moisture, Uavg, alpha], //Average speed
+      [moisture, Umin, alpha], //Min speed
+      [moisture, Umax, alpha]  //Max speed
+    ];
+
+    //This is done in sync
+    for (n = 0; n < dataUnits.length; n++){
+      ignMaps[n] = JSON.parse(Run(dataUnits[n]));
+    }
+
+    function Run(dataUnit){
+
+      return engine(dataUnit, rows, cols, aspectMap, slopeMap, clcMap, height, width);
+    }
+
+    postProcessMaps();
+  }
+
+  function postProcessMaps(){
+    var maps = {
+      'averageCase': ignMaps[0],
+      'bestCase': ignMaps[1], 
+      'worstCase': ignMaps[2],
+      'clc': clcMap
+    }
+
+    var tf = 120;
+
+    ignToKml(maps['worstCase'] , 'worstCase.kml', tf, ignitionPt, rows, cols, height, width);
+    ignToKml(maps['bestCase'] , 'bestCase.kml', tf, ignitionPt, rows, cols, height, width);
+    ignToKml(maps['averageCase'] , 'averageCase.kml', tf, ignitionPt, rows, cols, height, width);
+
+    callback(maps);
+  }
+
+
 
 }

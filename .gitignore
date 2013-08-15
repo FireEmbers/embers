@@ -1,1 +1,4 @@
 node_modules/
+*.map
+*.kml
+*.txt
