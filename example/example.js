@@ -4,8 +4,6 @@
 // 5% moisture
 // forecast for 2h
 
-console.log = console.trace;
-
 var embers = require('./../index');
 var write2D = require('embersutils').write2D;
 
