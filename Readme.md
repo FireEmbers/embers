@@ -4,14 +4,20 @@
 
 ###clone git repository 
 
+```
 git clone git@github.com:FireEmbers/demoAPI.git
+```
 
 ###Run npm install
 ```
 npm install
 ```
 
-##Usage example (see also [example.js](https://github.com/FireEmbers/demoAPI/blob/master/example/example.js))
+###Usage example (see also [example.js](https://github.com/FireEmbers/demoAPI/blob/master/example/example.js))
+
+run with 
+
+`node example/example.js`
 
 ```
 var embers = require('./../index');
