@@ -1,15 +1,20 @@
 #Embers demo API 
 
-##Install 
+##Install
+
+###clone git repository 
+
+git clone git@github.com:FireEmbers/demoAPI.git
+
+###Run npm install
+```
+npm install
+```
+
+##Usage example(see also [example.js](https://github.com/FireEmbers/demoAPI/blob/master/example/example.js))
 
 ```
-npm install github repo
-```
-
-##Usage
-
-```
-var embers = require('embers');
+var embers = require('./../index');
 
 var ignitionPt = [42.99982, -8.112345]; //[latitude, longitude]
 

@@ -5,11 +5,11 @@ var ignToKml = require('ignMapToKml');
 
 module.exports = function(ignitionPt, U, std, alpha, callback){
 
-  var rows = 20;
-  var cols = 20;
+  var rows = 50;
+  var cols = 50;
 
-  var height = 4000;
-  var width = 4000;
+  var height = 2000;
+  var width = 2000;
 
   var moisture = 5; //percentage 
 

@@ -1,3 +1,9 @@
+//Test Case conditions
+// 50x50 cells;
+// 2x2 km;
+// 5% moisture
+// forecast for 2h
+
 var embers = require('./../index');
 var write2D = require('embersutils').write2D;
 
@@ -9,13 +15,12 @@ var std = 10;
 
 embers(ignitionPt, U, std, alpha, function(maps){
 
-  var rows = 20; 
-  var cols = 20;
+  var rows = 50; 
+  var cols = 50;
   
   write2D (maps['worstCase'], rows, cols, 'worstCase.map') ;
   write2D (maps['bestCase'], rows, cols, 'bestCase.map') ;
   write2D (maps['averageCase'], rows, cols, 'averageCase.map') ;
-  write2D (maps['clc'], rows, cols, 'clc.map');
 });
 
 
