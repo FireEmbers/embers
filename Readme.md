@@ -44,5 +44,5 @@ function callback(maps){
 
 The following image show average case, worst case and best case scenarios regarding wind speed variability
 
-![browserify!](https://github.com/FireEmbers/demoAPI/blob/master/example/embersDemo.png)
+![embersDemo!](https://raw.github.com/FireEmbers/demoAPI/master/example/embersDemo.png)
 
