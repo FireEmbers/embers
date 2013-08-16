@@ -40,5 +40,9 @@ function callback(maps){
 
 ```
 
+##Results
 
+The following image show average case, worst case and best case scenarios regarding wind speed variability
+
+![browserify!](https://www.dropbox.com/s/gwm4kg2rsoxg4z8/embersDemo.png)
 
