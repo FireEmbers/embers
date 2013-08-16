@@ -16,7 +16,7 @@ npm install
 ```
 var embers = require('./../index');
 
-var ignitionPt = [42.99982, -8.112345]; //[latitude, longitude]
+var ignitionPt = [41 + 47 / 60 + 6.39/3600,- (8 + 8/60 + 26.43/3600)]; //[latitude, longitude]
 
 var U = 5 // average wind speed at 10 meters above ground
 
@@ -25,9 +25,9 @@ var std = 10 //standard deviation in percentage of average speed
 var alpha = 135 //wind direction, degrees clockwise from north
 
 
-embers(ignitionPt, U, std, alpha, callback);
+embers(ignitionPt, U, std, alpha, onIgnitionMaps);
 
-function callback(maps){
+function onIgnitionMaps(maps){
 
   //maps is an object with the contour array of 3 different forecast cases:
 
