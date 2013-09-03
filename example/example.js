@@ -15,6 +15,8 @@ var std = 10;
 
 embers(ignitionPt, U, std, alpha, function(maps){
 
+  //resolution used in the forecast
+  //don't change these values unless you know what you're doing
   var rows = 50; 
   var cols = 50;
   
