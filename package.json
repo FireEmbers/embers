@@ -21,10 +21,10 @@
   "readmeFilename": "Readme.md",
   "gitHead": "74d4da5cb5b6c75fa8b2a9df70521a9f126a174c",
   "dependencies": {
-    "gisClient": "git+ssh://git@github.com:FireEmbers/gisclient.git",
-    "embersengine": "git://github.com/FireEmbers/EmberEngine.git",
+    "gisClient": "https://github.com/FireEmbers/gisclient/archive/master.tar.gz",
+    "embersengine": "https://github.com/FireEmbers/EmberEngine/archive/master.tar.gz",
     "cconv": "~0.1.0",
-    "embersutils": "git://github.com/FireEmbers/utils.git",
-    "ignMapToKml": "git://github.com/FireEmbers/ignToKml.git"
+    "embersutils": "https://github.com/FireEmbers/utils/archive/master.tar.gz",
+    "ignMapToKml": "https://github.com/FireEmbers/ignToKml/archive/master.tar.gz"
   }
 }
