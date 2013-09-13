@@ -2,6 +2,8 @@ var engine = require('embersengine');
 var getGisMap = require('gisClient');
 var cconv = require('cconv');
 var ignToKml = require('ignMapToKml');
+var readFile = require('utils').readFile;
+var createDataUnit = require('utils').createDataUnits;
 
 module.exports = function(ignitionPt, U, std, alpha, callback){
 
@@ -71,12 +73,47 @@ module.exports = function(ignitionPt, U, std, alpha, callback){
       aspectMap = terrainMaps["aspect"];
       slopeMap = terrainMaps["slope"];
 
-      computeIgnMaps();
+      loadEngine();
+    }
+  }
+
+  function loadEngine(){
+
+    readFile('program.min.js', onEngineLoad);
+
+    function onEngineLoad(){
+
+      programString = RunString(); 
+
+      function RunString(){
+
+        function Run(dataUnit){
+
+          var engine = req('/home/fsousa/src/crp/embers/engine/src/program.js');
+
+          return engine(dataUnit, rows, cols, aspectMap, slopeMap, clcMap, height, width);
+
+        }
+
+        var
+         string = Run.toString() + ';' + programString +
+        'var rows =' + rows.toString() + ';' +
+        'var cols =' + cols.toString() + ';' +
+        'var height =' + height.toString() + ';' +
+        'var width =' + width.toString() + ';' +
+        'var slopeMap =' + JSON.stringify(slopeArray) + ';' +
+        'var aspectMap =' + JSON.stringify(aspectArray) + ';' +
+        'var clcMap =' + JSON.stringify(clcArray) + ';';
+
+        return string;
+      }
+
+      getThingsDone();
 
     }
   }
 
-  function computeIgnMaps(){
+  function getThingsDone(){
 
 
     //dataUnits array has 3 sub arrays, each for a different cenario of wind speed
