@@ -119,6 +119,8 @@ module.exports = function(ignitionPt, U, std, alpha, callback){
     //dataUnits array has 3 sub arrays, each for a different cenario of wind speed
     //Each data Unit is [% moisture, Wind Speed in m/s, wind direction degrees clockwise from north]
 
+    var dataUnits = createDataUnit( runs, moisture, U, windDir);
+
     Uavg = U;
     Umax = U*(1+std/100);
     Umin = (U*(1-std/100) >= 0) ? U*(1-std/100): 0;
