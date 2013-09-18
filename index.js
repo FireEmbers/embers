@@ -4,6 +4,8 @@ var cconv = require('cconv');
 var ignToKml = require('ignMapToKml');
 var readFile = require('utils').readFile;
 var createDataUnit = require('utils').createDataUnits;
+var programovo = require('programovo');
+var stats = require("stats-lite")
 
 module.exports = function(ignitionPt, U, std, alpha, callback){
 
@@ -13,7 +15,9 @@ module.exports = function(ignitionPt, U, std, alpha, callback){
   var height = 2000;
   var width = 2000;
 
-  var moisture = 5; //percentage 
+  var moisture = 5;//percentage 
+
+  var runs = 10;
 
   //compute boundaries in ETRS89 LAEA (srid 3035)
   //to pass to the postgis client 
@@ -47,7 +51,7 @@ module.exports = function(ignitionPt, U, std, alpha, callback){
   var clcMap;
   var aspectMap;
   var slopeMap;
-  var ignMaps = new Array(3);
+  var ignMaps = new Array(runs);
 
   getClcMap();
 
@@ -108,54 +112,74 @@ module.exports = function(ignitionPt, U, std, alpha, callback){
         return string;
       }
 
-      getThingsDone();
+      getThingsDone(programString);
 
     }
   }
 
-  function getThingsDone(){
+  function getThingsDone(programString){
 
 
     //dataUnits array has 3 sub arrays, each for a different cenario of wind speed
     //Each data Unit is [% moisture, Wind Speed in m/s, wind direction degrees clockwise from north]
 
-    var dataUnits = createDataUnit( runs, moisture, U, windDir);
+    //done in sync
+    var DataArray = createDataUnit( runs, moisture, U, alpha);
 
-    Uavg = U;
-    Umax = U*(1+std/100);
-    Umin = (U*(1-std/100) >= 0) ? U*(1-std/100): 0;
-    var dataUnits = [
-      [moisture, Uavg, alpha], //Average speed
-      [moisture, Umin, alpha], //Min speed
-      [moisture, Umax, alpha]  //Max speed
-    ];
+    sendStuffToCP(dataUnits, programString);
+  }
 
-    //This is done in sync
-    for (n = 0; n < dataUnits.length; n++){
-      ignMaps[n] = JSON.parse(Run(dataUnits[n]));
+  i = 0;
+  function sendStuffToCP(dataArray, programString){
+
+    programovo(userName, pass, programString, dataArray, handleResults, onEnd);
+
+    function handleResults(res){
+
+      ignMaps[i++] = res;
     }
 
-    function Run(dataUnit){
-
-      return engine(dataUnit, rows, cols, aspectMap, slopeMap, clcMap, height, width);
+    function onEnd(){
+      postProcessMaps();
     }
 
-    postProcessMaps();
   }
 
   function postProcessMaps(){
-    var maps = {
-      'averageCase': ignMaps[0],
-      'bestCase': ignMaps[1], 
-      'worstCase': ignMaps[2],
+
+    //Compute Average map
+    var outputMaps = {
+      'mean': new Array(ignMaps.lengths),
+      'upperStd': new Array(ignMaps.lengths),
+      'lowerStd': new Array(ignMaps.lengths),
       'clc': clcMap
+    }
+
+    //sample Array is a temporary array which stores the values at each (col,row) of the 
+    //several Monte Calo maps from ignMaps
+    var sampleArray = new Array(ignMaps.length);
+
+    for (var row = 0; row < rows; row++) {
+      for (var col = 0; col < cols; col++) {
+
+        for (var i = 0; i < ignMaps.length; i++)
+          sampleArray[i] = ignMaps[i][col + cols*row];
+
+        var mean = stats.mean(sampleArray);
+        var std = stats.stdev(sampleArray);
+
+        outputMaps['mean'] = mean;
+        outputMaps['upperStd'] = mean + upperStd;
+        outputMaps['lowerStd'] = mean + lowerStd;
+
+      }
     }
 
     var tf = 120;
 
-    ignToKml(maps['worstCase'] , 'worstCase.kml', tf, ignitionPt, rows, cols, height, width);
-    ignToKml(maps['bestCase'] , 'bestCase.kml', tf, ignitionPt, rows, cols, height, width);
-    ignToKml(maps['averageCase'] , 'averageCase.kml', tf, ignitionPt, rows, cols, height, width);
+    ignToKml(outputMaps['upperStd'] , 'upperStd.kml', tf, ignitionPt, rows, cols, height, width);
+    ignToKml(outputMaps['lowerStd'] , 'lowerStd.kml', tf, ignitionPt, rows, cols, height, width);
+    ignToKml(outputMaps['mean'] , 'mean.kml', tf, ignitionPt, rows, cols, height, width);
 
     callback(maps);
   }

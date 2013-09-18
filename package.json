@@ -25,6 +25,7 @@
     "embersengine": "https://github.com/FireEmbers/EmberEngine/archive/master.tar.gz",
     "cconv": "~0.1.0",
     "embersutils": "https://github.com/FireEmbers/utils/archive/master.tar.gz",
-    "ignMapToKml": "https://github.com/FireEmbers/ignToKml/archive/master.tar.gz"
+    "ignMapToKml": "https://github.com/FireEmbers/ignToKml/archive/master.tar.gz",
+    "stats-lite": "~1.0.0"
   }
 }
