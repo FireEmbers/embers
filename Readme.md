@@ -27,15 +27,13 @@ var alpha = 135 //wind direction, degrees clockwise from north
 
 embers(ignitionPt, U, std, alpha, onIgnitionMaps);
 
-function onIgnitionMaps(maps){
+function onIgnitionMaps(kmlMaps){
 
   //maps is an object with the contour array of 3 different forecast cases:
 
-  var worstCase = maps['worstCase'] ;
-
-  var bestCase = maps['bestCase'] ;
-
-  var averageCase = maps['averageCase'] ;
+  fs.writeFileSync('worstCase.kml', kmlMaps['worstCase'], {encoding: 'utf8'});
+  fs.writeFileSync('bestCase.kml', kmlMaps['bestCase'], {encoding: 'utf8'});
+  fs.writeFileSync('averageCase.kml', kmlMaps['averageCase'], {encoding: 'utf8'});
 }
 
 ```

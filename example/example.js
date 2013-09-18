@@ -7,22 +7,20 @@
 var embers = require('./../index');
 var write2D = require('embersutils').write2D;
 
+var fs = require('fs');
+
 var ignitionPt = [ 41 + 47 / 60 + 6.39/3600,- (8 + 8/60 + 26.43/3600)];
 
 var U = 1;
 var alpha= 135;
 var std = 10;
 
-embers(ignitionPt, U, std, alpha, function(maps){
-
-  //resolution used in the forecast
-  //don't change these values unless you know what you're doing
-  var rows = 50; 
-  var cols = 50;
+embers(ignitionPt, U, std, alpha, function(kmlMaps){
   
-  write2D (maps['worstCase'], rows, cols, 'worstCase.map') ;
-  write2D (maps['bestCase'], rows, cols, 'bestCase.map') ;
-  write2D (maps['averageCase'], rows, cols, 'averageCase.map') ;
+  fs.writeFileSync('worstCase.kml', kmlMaps['worstCase'], {encoding: 'utf8'});
+  fs.writeFileSync('bestCase.kml', kmlMaps['bestCase'], {encoding: 'utf8'});
+  fs.writeFileSync('averageCase.kml', kmlMaps['averageCase'], {encoding: 'utf8'});
+
 });
 
 

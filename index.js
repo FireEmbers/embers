@@ -114,11 +114,13 @@ module.exports = function(ignitionPt, U, std, alpha, callback){
 
     var tf = 120;
 
-    ignToKml(maps['worstCase'] , 'worstCase.kml', tf, ignitionPt, rows, cols, height, width);
-    ignToKml(maps['bestCase'] , 'bestCase.kml', tf, ignitionPt, rows, cols, height, width);
-    ignToKml(maps['averageCase'] , 'averageCase.kml', tf, ignitionPt, rows, cols, height, width);
+    var kmlMaps = {};
 
-    callback(maps);
+    kmlMaps['worstCase'] = ignToKml(maps['worstCase'], tf, ignitionPt, rows, cols, height, width);
+    kmlMaps['bestCase'] = ignToKml(maps['bestCase'] , tf, ignitionPt, rows, cols, height, width);
+    kmlMaps['averageCase'] = ignToKml(maps['averageCase'] , tf, ignitionPt, rows, cols, height, width);
+
+    callback(kmlMaps);
   }
 
 
