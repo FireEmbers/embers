@@ -15,13 +15,30 @@ var U = 1;
 var alpha= 135;
 var std = 10;
 
-embers(ignitionPt, U, std, alpha, function(kmlMaps){
+embers(ignitionPt, U, std, alpha, function(kmlMaps, pathArrays){
   
   fs.writeFileSync('worstCase.kml', kmlMaps['worstCase'], {encoding: 'utf8'});
   fs.writeFileSync('bestCase.kml', kmlMaps['bestCase'], {encoding: 'utf8'});
   fs.writeFileSync('averageCase.kml', kmlMaps['averageCase'], {encoding: 'utf8'});
 
+  writePathArray('worstCaseArray.dat', pathArrays['worstCase']);
+  writePathArray('bestCaseArray.dat', pathArrays['bestCase']);
+  writePathArray('averageCaseArray.dat', pathArrays['averageCase']);
+
 });
+
+
+function writePathArray(filename, array){
+
+  var file = fs.createWriteStream(filename);
+  file.on('error', function(err){ 
+    return console.log('Error on writing path coordinates file')
+  });
+  array.forEach( function(v){
+    file.write(v.join(',')+'\n');
+  });
+  file.end();
+}
 
 
 
