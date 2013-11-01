@@ -7,9 +7,11 @@
 var embers = require('./../index');
 var write2D = require('embersutils').write2D;
 
+var embersToNGNS = require('./../../restApi/src/pathToNGNS'); //quick dirty fix. This goes to utils
 var fs = require('fs');
 
-var ignitionPt = [ 41 + 47 / 60 + 6.39/3600,- (8 + 8/60 + 26.43/3600)];
+var ignitionPt = //[ 41 + 47 / 60 + 6.39/3600,- (8 + 8/60 + 26.43/3600)];
+[41.7718400422817, -7.9167833239285];
 
 var U = 1;
 var alpha= 135;
@@ -24,6 +26,8 @@ embers(ignitionPt, U, std, alpha, function(kmlMaps, pathArrays){
   writePathArray('worstCaseArray.dat', pathArrays['worstCase']);
   writePathArray('bestCaseArray.dat', pathArrays['bestCase']);
   writePathArray('averageCaseArray.dat', pathArrays['averageCase']);
+
+  fs.writeFileSync ('NGNSstring.txt', embersToNGNS(pathArrays), {encoding: 'utf8'});
 
 });
 

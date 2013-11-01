@@ -1,5 +1,11 @@
 #Embers demo API 
 
+Embers is a stochastic fire model that runs on top of [CrowdProcess](http://crowdprocess.com) and is written in node.
+We use existing fire models (ie, [firelib](http://www.frames.gov/rcs/0/935.html), [farsite](https://collab.firelab.org/software/projects/farsite/repository/revisions/72/show/branches/api/c++)) which require deterministic input parameters and run monte carlo simulations with probability distribution functions for the input data. This method allows for uncertainty quantification of the solution and, much like probabilistic weather forecast, you end up with a probabilistic fire front forecast.
+
+
+You can install this demo and run it using node. Get started by trying the example below.
+
 ##Install
 
 
@@ -27,13 +33,15 @@ var alpha = 135 //wind direction, degrees clockwise from north
 
 embers(ignitionPt, U, std, alpha, onIgnitionMaps);
 
-function onIgnitionMaps(kmlMaps){
+function onIgnitionMaps(kmlMaps, pathArray){
 
-  //maps is an object with the contour array of 3 different forecast cases:
+  //kmlMaps is an object with the contour array of 3 different forecast cases:
 
   fs.writeFileSync('worstCase.kml', kmlMaps['worstCase'], {encoding: 'utf8'});
   fs.writeFileSync('bestCase.kml', kmlMaps['bestCase'], {encoding: 'utf8'});
   fs.writeFileSync('averageCase.kml', kmlMaps['averageCase'], {encoding: 'utf8'});
+
+  //pathArray contains the coordinates array of the three scenarios.
 }
 
 ```
