@@ -6,6 +6,8 @@ We use existing fire models (ie, [firelib](http://www.frames.gov/rcs/0/935.html)
 
 You can install this demo and run it using node. Get started by trying the example below.
 
+The output of this demo are kml files that can be imported to google earth.
+
 ##Install
 
 
@@ -13,15 +15,21 @@ You can install this demo and run it using node. Get started by trying the examp
 git clone git@github.com:FireEmbers/demoAPI.git; cd demoAPI; npm install
 ```
 
-###Usage example (see also [example.js](https://github.com/FireEmbers/demoAPI/blob/master/example/example.js))
+##Usage
 
-run with 
+you skip ahead and run a fully functional example with `node example/example.js`.
 
-`node example/example.js`
+
+To use the API you have to do something like this:
+
+###Require
 
 ```
-var embers = require('./../index');
+var embers = require('demoAPI');
+```
+###Define main parameter
 
+```
 var ignitionPt = [41 + 47 / 60 + 6.39/3600,- (8 + 8/60 + 26.43/3600)]; //[latitude, longitude]
 
 var U = 5 // average wind speed at 10 meters above ground
@@ -29,8 +37,10 @@ var U = 5 // average wind speed at 10 meters above ground
 var std = 10 //standard deviation in percentage of average speed
 
 var alpha = 135 //wind direction, degrees clockwise from north
+```
 
-
+###Call API
+```
 embers(ignitionPt, U, std, alpha, onIgnitionMaps);
 
 function onIgnitionMaps(kmlMaps, pathArray){
