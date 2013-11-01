@@ -17,17 +17,15 @@ git clone git@github.com:FireEmbers/demoAPI.git; cd demoAPI; npm install
 
 ##Usage
 
-you skip ahead and run a fully functional example with `node example/example.js`.
+You skip ahead and run a fully functional example with `node example/example.js`.
 
-
-To use the API you have to do something like this:
 
 ###Require
 
 ```
 var embers = require('demoAPI');
 ```
-###Define main parameter
+###Define parameters
 
 ```
 var ignitionPt = [41 + 47 / 60 + 6.39/3600,- (8 + 8/60 + 26.43/3600)]; //[latitude, longitude]
