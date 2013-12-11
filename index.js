@@ -3,7 +3,7 @@ var getGisMap = require('gisClient');
 var cconv = require('cconv');
 var ignToKml = require('ignMapToKml');
 
-module.exports = function(ignitionPt, U, moisture, std, alpha, callback){
+module.exports = function(ignitionPt, U, std, moisture, alpha, callback){
 
   var rows = 150;
   var cols = 150;
