@@ -3,7 +3,7 @@ var getGisMap = require('gisClient');
 var cconv = require('cconv');
 var ignToKml = require('ignMapToKml');
 
-module.exports = function(ignitionPt, U, std, alpha, callback){
+module.exports = function(ignitionPt, U, moisture, std, alpha, callback){
 
   var rows = 150;
   var cols = 150;
@@ -11,7 +11,7 @@ module.exports = function(ignitionPt, U, std, alpha, callback){
   var height = 2000;
   var width = 2000;
 
-  var moisture = 5; //percentage 
+  //var moisture = 5; //percentage 
 
   //compute boundaries in ETRS89 LAEA (srid 3035)
   //to pass to the postgis client 
