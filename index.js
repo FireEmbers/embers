@@ -5,8 +5,8 @@ var ignToKml = require('ignMapToKml');
 
 module.exports = function(ignitionPt, U, std, alpha, callback){
 
-  var rows = 50;
-  var cols = 50;
+  var rows = 150;
+  var cols = 150;
 
   var height = 2000;
   var width = 2000;
