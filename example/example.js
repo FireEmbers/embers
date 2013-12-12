@@ -9,14 +9,21 @@ var embers = require('./../index');
 var write2D = require('embersutils').write2D;
 var fs = require('fs');
 
-var ignitionPt = //[ 41 + 47 / 60 + 6.39/3600,- (8 + 8/60 + 26.43/3600)];
-[41.7718400422817, -7.9167833239285];
+var opts = {
+  ignitionPt: [41.7718400422817, -7.9167833239285],
+  U: 1.5,
+  alpha: 115,
+  std: 10,
+  moisture: 5,
+  rows: 100,
+  cols: 100,
+  height: 6000,
+  width: 6000
+}
 
-var U = 1;
-var alpha= 135;
-var std = 10;
+embers(opts, function(err, kmlMaps, pathArrays){
 
-embers(ignitionPt, U, std, alpha, function(kmlMaps, pathArrays){
+  if (err) throw err;
 
   fs.writeFileSync(path.join(__dirname, 'worstCase.kml'), 
     kmlMaps['worstCase'], {encoding: 'utf8'});

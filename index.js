@@ -3,13 +3,21 @@ var getGisMap = require('gisClient');
 var cconv = require('cconv');
 var ignToKml = require('ignMapToKml');
 
-module.exports = function(ignitionPt, U, std, moisture, alpha, callback){
+module.exports = function(opts, callback){
 
-  var rows = 150;
-  var cols = 150;
+  var ignitionPt = opts.ignitionPt;
+  var U = opts.U;
+  var std = opts.std;
+  var moisture = opts.moisture;
+  var alpha = opts.alpha;
+  var rows = opts.rows;
+  var cols = opts.cols;
+  var height = opts.height;
+  var width = opts.width;
 
-  var height = 2000;
-  var width = 2000;
+  console.log('Embers demo start...');
+
+  console.log('Resolution: %dx%d',rows,cols, 'Size:', height,'[km]');
 
   //var moisture = 5; //percentage 
 
@@ -53,7 +61,11 @@ module.exports = function(ignitionPt, U, std, moisture, alpha, callback){
 
     getGisMap(boundaries, 'postgis', onClcMap);
 
-    function onClcMap(map){
+    function onClcMap(err, map){
+
+      if (err) return callback(err, null);
+
+      console.log('Got clc maps...');
 
       clcMap = JSON.parse(map);
 
@@ -64,7 +76,11 @@ module.exports = function(ignitionPt, U, std, moisture, alpha, callback){
   function getTerrainMap(){
     getGisMap(boundaries, 'grass',onTerrainMap);
 
-    function onTerrainMap(terrainMaps){
+    function onTerrainMap(err, terrainMaps){
+
+      if (err) return callback(err, null);
+
+      console.log('Got terrain maps...');
 
       terrainMaps = JSON.parse(terrainMaps);
 
@@ -77,6 +93,8 @@ module.exports = function(ignitionPt, U, std, moisture, alpha, callback){
   }
 
   function computeIgnMaps(){
+
+    console.log('Running simulations...');
 
 
     //dataUnits array has 3 sub arrays, each for a different cenario of wind speed
@@ -105,6 +123,8 @@ module.exports = function(ignitionPt, U, std, moisture, alpha, callback){
   }
 
   function postProcessMaps(){
+
+    console.log('Post-processing...');
     var maps = {
       'averageCase': ignMaps[0],
       'bestCase': ignMaps[1], 
@@ -112,7 +132,7 @@ module.exports = function(ignitionPt, U, std, moisture, alpha, callback){
       'clc': clcMap
     }
 
-    var tf = 120;
+    var tf = 60*13;
 
     var worstCase = ignToKml(maps['worstCase'], tf, ignitionPt, rows, cols, height, width);
     var bestCase = ignToKml(maps['bestCase'] , tf, ignitionPt, rows, cols, height, width);    
@@ -130,7 +150,7 @@ module.exports = function(ignitionPt, U, std, moisture, alpha, callback){
       'averageCase': averageCase['path']
     }
 
-    callback(kmlMaps, pathArrays);
+    callback(null, kmlMaps, pathArrays);
   }
 
 
