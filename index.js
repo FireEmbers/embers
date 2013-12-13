@@ -2,6 +2,7 @@ var engine = require('embersengine');
 var getGisMap = require('gisClient');
 var cconv = require('cconv');
 var ignToKml = require('ignMapToKml');
+var write2D = require('utils').write2D;
 
 module.exports = function(opts, callback){
 
@@ -137,7 +138,7 @@ module.exports = function(opts, callback){
       'clc': clcMap
     }
 
-    var tf = 60*13;
+    var tf = 60*3;
 
     var worstCase = ignToKml(maps['worstCase'], tf, ignitionPt, rows, cols, height, width);
     var bestCase = ignToKml(maps['bestCase'], tf, ignitionPt, rows, cols, height, width);    
@@ -154,6 +155,8 @@ module.exports = function(opts, callback){
       'bestCase': bestCase['path'],
       'averageCase': averageCase['path']
     }
+
+    write2D(maps['averageCase'], rows, cols, ('/home/ubuntu/average.dat'));
 
     callback(null, kmlMaps, pathArrays);
   }
