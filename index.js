@@ -2,7 +2,6 @@ var engine = require('embersengine');
 var getGisMap = require('gisClient');
 var cconv = require('cconv');
 var ignToKml = require('ignMapToKml');
-var write2D = require('utils').write2D;
 
 module.exports = function(opts, callback){
 
