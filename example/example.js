@@ -14,7 +14,7 @@ var opts = {
   U: 1.5,
   alpha: 115,
   std: 10,
-  moisture: 5,
+  moisture: 15,
   rows: 100,
   cols: 100,
   height: 6000,

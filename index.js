@@ -110,8 +110,13 @@ module.exports = function(opts, callback){
     ];
 
     //This is done in sync
+    
     for (n = 0; n < dataUnits.length; n++){
-      ignMaps[n] = JSON.parse(Run(dataUnits[n]));
+      var ignMap = Run(dataUnits[n]);
+      if ( ignMap === null ) {
+        return callback('Ignition Map came out null', null);
+      }
+      ignMaps[n] = JSON.parse(ignMap);
     }
 
     function Run(dataUnit){
@@ -135,8 +140,8 @@ module.exports = function(opts, callback){
     var tf = 60*13;
 
     var worstCase = ignToKml(maps['worstCase'], tf, ignitionPt, rows, cols, height, width);
-    var bestCase = ignToKml(maps['bestCase'] , tf, ignitionPt, rows, cols, height, width);    
-    var averageCase = ignToKml(maps['averageCase'] , tf, ignitionPt, rows, cols, height, width);
+    var bestCase = ignToKml(maps['bestCase'], tf, ignitionPt, rows, cols, height, width);    
+    var averageCase = ignToKml(maps['averageCase'], tf, ignitionPt, rows, cols, height, width);
 
     var kmlMaps = {
       'worstCase': worstCase['kml'],
