@@ -155,11 +155,8 @@ module.exports = function(opts, callback){
       'averageCase': averageCase['path']
     }
 
-    write2D(maps['averageCase'], rows, cols, ('/home/ubuntu/average.dat'));
-
     callback(null, kmlMaps, pathArrays);
   }
-
 
 
 }
