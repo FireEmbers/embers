@@ -114,7 +114,7 @@ module.exports = function(opts, callback){
     for (n = 0; n < dataUnits.length; n++){
       var ignMap = Run(dataUnits[n]);
       if ( ignMap === null ) {
-        return callback('Ignition Map came out null', null);
+        return callback('Non Burnable spot', null);
       }
       ignMaps[n] = JSON.parse(ignMap);
     }
