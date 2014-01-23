@@ -1,4 +1,4 @@
-var embers = require('./index.js');
+var embers = require('./post-processing.js');
 
 var maps =[
     [1, 3, 20],
