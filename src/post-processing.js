@@ -1,4 +1,4 @@
-var StatsArray = require('./stats-array/stats-array.js');
+var StatsArray = require('stats-array');
 
 var Embers = {
   maps  : [],

@@ -2,6 +2,7 @@ var engine = require('embersengine');
 var getGisMap = require('gisClient');
 var cconv = require('cconv');
 var ignToKml = require('ignMapToKml');
+var CrowdProcess = require('crowdprocess');
 
 module.exports = function(opts, callback){
 
