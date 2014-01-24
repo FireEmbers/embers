@@ -27,6 +27,10 @@
     "embersutils": "https://github.com/FireEmbers/utils/archive/master.tar.gz",
     "ignMapToKml": "https://github.com/FireEmbers/ignToKml/archive/master.tar.gz",
     "crowdprocess": "~0.5.4",
-    "stats-array": "git://github.com/tblobaum/stats-array.git"
+    "stats-array": "git://github.com/tblobaum/stats-array.git",
+    "box-muller": "0.0.1"
+  },
+  "devDependencies": {
+    "JSONStream": "~0.7.1"
   }
 }

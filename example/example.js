@@ -11,48 +11,22 @@ var fs = require('fs');
 
 var opts = {
   ignitionPt: [41.7718400422817, -7.9167833239285],
-  U: 1.5,
+  u: 1.5,
   alpha: 115,
   std: 10,
-  moisture: 15,
+  moisture: 5,
   rows: 100,
   cols: 100,
   height: 6000,
   width: 6000
-}
+};
 
-embers(opts, function(err, kmlMaps, pathArrays){
+embers(opts, function(err, kmlMaps){
 
   if (err) throw err;
 
-  fs.writeFileSync(path.join(__dirname, 'worstCase.kml'), 
-    kmlMaps['worstCase'], {encoding: 'utf8'});
-
-  fs.writeFileSync(path.join(__dirname, 'bestCase.kml'), 
-    kmlMaps['bestCase'], {encoding: 'utf8'});
-
-  fs.writeFileSync(path.join(__dirname, 'averageCase.kml'), 
-    kmlMaps['averageCase'], {encoding: 'utf8'});
-
-  writePathArray('worstCaseArray.dat', pathArrays['worstCase']);
-  writePathArray('bestCaseArray.dat', pathArrays['bestCase']);
-  writePathArray('averageCaseArray.dat', pathArrays['averageCase']);
+  fs.writeFileSync(path.join(__dirname, 'avg1h.kml'), kmlMaps['avg1h'], {encoding: 'utf8'});
+  fs.writeFileSync(path.join(__dirname, 'udev1h.kml'), kmlMaps['udev1h'], {encoding: 'utf8'});
+  fs.writeFileSync(path.join(__dirname, 'ldev1h.kml'), kmlMaps['ldev1h'], {encoding: 'utf8'});
 
 });
-
-function writePathArray(filename, array){
-
-  var file = fs.createWriteStream(path.join(__dirname, filename));
-  file.on('error', function(err){ 
-    return console.log('Error on writing path coordinates file')
-  });
-  array.forEach( function(v){
-    file.write(v.join(',')+'\n');
-  });
-  file.end();
-}
-
-
-
-
-

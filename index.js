@@ -2,12 +2,21 @@ var engine = require('embersengine');
 var getGisMap = require('gisClient');
 var cconv = require('cconv');
 var ignToKml = require('ignMapToKml');
-var CrowdProcess = require('crowdprocess');
+var credentials = require('./credentials');
+var CrowdProcess = require('crowdprocess')(credentials);
+var fs = require('fs');
+var join = require('path').join;
+var DataUnitStream = require('./src/dataUnitStream');
+var postProcessing = require('./src/post-processing.js');
+
+var write2D = require('./../utils/src/write2D');
+
+var programString = fs.readFileSync(join(__dirname, 'src', 'program.min.js'));
 
 module.exports = function(opts, callback){
 
   var ignitionPt = opts.ignitionPt;
-  var U = opts.U;
+  var u = opts.u;
   var std = opts.std;
   var moisture = opts.moisture;
   var alpha = opts.alpha;
@@ -16,7 +25,7 @@ module.exports = function(opts, callback){
   var height = opts.height;
   var width = opts.width;
 
-  console.log('Embers demo start...');
+  console.log('Embers start...');
 
   console.log('Resolution: %dx%d',rows,cols, 'Size:', height,'[km]');
 
@@ -54,10 +63,8 @@ module.exports = function(opts, callback){
   var clcMap;
   var aspectMap;
   var slopeMap;
-  var ignMaps = new Array(3);
 
   getClcMap();
-
   function getClcMap(){
 
     getGisMap(boundaries, 'postgis', onClcMap);
@@ -95,69 +102,77 @@ module.exports = function(opts, callback){
 
   function computeIgnMaps(){
 
+    //Build Run function string from browserify code
+    var RunString = getProgram();
+    //fs.writeFileSync('Run.js', RunString, {encoding: 'utf8'});
+    var job = CrowdProcess(RunString, postProcessMaps);
+    function getProgram(){
+
+      function Run(dataUnit){
+
+        //never mind the path inside the req(), is just a reference for the 
+        //browserified module in program.js
+        var engine = req('/home/fsousa/src/crp/embers/engine/src/program.js');
+
+        return engine(dataUnit, rows, cols, aspectMap, slopeMap, clcMap, height, width);
+
+      }
+
+      var
+       string = Run.toString() + ';' + programString +
+      'var rows =' + rows.toString() + ';' +
+      'var cols =' + cols.toString() + ';' +
+      'var height =' + height.toString() + ';' +
+      'var width =' + width.toString() + ';' +
+      'var slopeMap =' + JSON.stringify(slopeMap) + ';' +
+      'var aspectMap =' + JSON.stringify(aspectMap) + ';' +
+      'var clcMap =' + JSON.stringify(clcMap) + ';';
+
+      return string;
+    }
+
+    //create data unit stream
+    //console.log(moisture, u, alpha, std);
+    var dataStream = DataUnitStream(moisture, u, alpha, std, 2);
     console.log('Running simulations...');
 
+    dataStream.pipe(job);
 
-    //dataUnits array has 3 sub arrays, each for a different cenario of wind speed
-    //Each data Unit is [% moisture, Wind Speed in m/s, wind direction degrees clockwise from north]
+    //dataStream.on('data', function (data) {console.log(data)});
 
-    Uavg = U;
-    Umax = U*(1+std/100);
-    Umin = (U*(1-std/100) >= 0) ? U*(1-std/100): 0;
-    var dataUnits = [
-      [moisture, Uavg, alpha], //Average speed
-      [moisture, Umin, alpha], //Min speed
-      [moisture, Umax, alpha]  //Max speed
-    ];
+    var resultCounter = 0;
+    job.on('data', function (map) {
+      console.log(resultCounter++, 'Maps done...');
+      postProcessing.addMap(map);
+      var mapPP = ignToKml(map, 60, ignitionPt, rows, cols, height, width);
+      fs.writeFileSync('./map_' + resultCounter + '.kml', mapPP['kml'], {encoding: 'utf8'});
+      
+      write2D(JSON.parse(map), rows, cols, './testmap_'+resultCounter+'.map');
+    });
 
-    //This is done in sync
-    
-    for (n = 0; n < dataUnits.length; n++){
-      var ignMap = Run(dataUnits[n]);
-      if ( ignMap === null ) {
-        return callback('Non Burnable spot', null);
-      }
-      ignMaps[n] = JSON.parse(ignMap);
-    }
-
-    function Run(dataUnit){
-
-      return engine(dataUnit, rows, cols, aspectMap, slopeMap, clcMap, height, width);
-    }
-
-    postProcessMaps();
+    job.on('error', function (err) {
+      console.log('-->error:', err);
+    });
   }
 
-  function postProcessMaps(){
+  function postProcessMaps(allMaps){
 
     console.log('Post-processing...');
-    var maps = {
-      'averageCase': ignMaps[0],
-      'bestCase': ignMaps[1], 
-      'worstCase': ignMaps[2],
-      'clc': clcMap
-    }
 
-    var tf = 60*3;
+    var finalMaps = postProcessing.process();
 
-    var worstCase = ignToKml(maps['worstCase'], tf, ignitionPt, rows, cols, height, width);
-    var bestCase = ignToKml(maps['bestCase'], tf, ignitionPt, rows, cols, height, width);    
-    var averageCase = ignToKml(maps['averageCase'], tf, ignitionPt, rows, cols, height, width);
+    var tf = 60;
+
+    var avg = ignToKml(finalMaps['avg'], tf, ignitionPt, rows, cols, height, width);
+    var udev = ignToKml(finalMaps['udev'], tf, ignitionPt, rows, cols, height, width);
+    var ldev = ignToKml(finalMaps['ldev'], tf, ignitionPt, rows, cols, height, width);
 
     var kmlMaps = {
-      'worstCase': worstCase['kml'],
-      'bestCase': bestCase['kml'],
-      'averageCase': averageCase['kml']
+      'avg1h': avg['kml'],
+      'udev1h': udev['kml'],
+      'ldev1h': ldev['kml']
     };
 
-    var pathArrays = {
-      'worstCase': worstCase['path'],
-      'bestCase': bestCase['path'],
-      'averageCase': averageCase['path']
-    }
-
-    callback(null, kmlMaps, pathArrays);
+    callback(null, kmlMaps);
   }
-
-
-}
+};

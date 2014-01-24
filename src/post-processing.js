@@ -1,6 +1,6 @@
 var StatsArray = require('stats-array');
 
-var Embers = {
+var postProcessing = {
   maps  : [],
   avg   : [],
   ldev  : [],
@@ -34,4 +34,4 @@ var Embers = {
 
 };
 
-module.exports = Embers;
+module.exports = postProcessing;
