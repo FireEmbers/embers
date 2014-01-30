@@ -6,17 +6,15 @@ function dataStream (moisture, u, alpha, std, n) {
 
   // input stream for the program
   var data = new Readable({objectMode: true});
-  var dataunit = [0, 0, 0];
   data._read = function _read () {
     if (n--) {
-
+      var dataunit = [0, 0, 0];
       //dataUnits array has 3 sub arrays, each for a different cenario of wind speed
       //Each data Unit is [% moisture, Wind Speed in m/s, wind direction degrees clockwise from north]
-      dataunit[0] = moisture/100;
+      dataunit[0] = moisture;
       dataunit[1] = gauss(u, std/100*u);
       dataunit[1] = (dataunit[1] >= 0 ? dataunit[1] : 0);
       dataunit[2] = alpha;
-
       data.push(dataunit);
 
     } else {

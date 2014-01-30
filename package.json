@@ -1,20 +1,21 @@
 {
-  "name": "demoAPI",
+  "name": "Embers",
   "version": "0.1.0",
-  "description": "Embers demo API",
+  "description": "Stochastic Fire Forecast in CrowdProcess",
   "main": "index.js",
   "scripts": {
     "test": "tap tests/test*"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/FireEmbers/demoAPI.git"
+    "url": "git://github.com/FireEmbers/embers.git"
   },
   "keywords": [
     "embers",
     "api",
     "wildfire",
-    "forecast"
+    "forecast",
+    "monte Carlo"
   ],
   "author": "CrowdProcess",
   "license": "MIT",

@@ -24,6 +24,7 @@ module.exports = function(opts, callback){
   var cols = opts.cols;
   var height = opts.height;
   var width = opts.width;
+  var n = opts.n;
 
   console.log('Embers start...');
 
@@ -105,7 +106,12 @@ module.exports = function(opts, callback){
     //Build Run function string from browserify code
     var RunString = getProgram();
     //fs.writeFileSync('Run.js', RunString, {encoding: 'utf8'});
-    var job = CrowdProcess(RunString, postProcessMaps);
+    var job = CrowdProcess({
+      program: RunString,
+      onResults: postProcessMaps,
+      mock:false
+    });
+
     function getProgram(){
 
       function Run(dataUnit){
@@ -133,7 +139,7 @@ module.exports = function(opts, callback){
 
     //create data unit stream
     //console.log(moisture, u, alpha, std);
-    var dataStream = DataUnitStream(moisture, u, alpha, std, 2);
+    var dataStream = DataUnitStream(moisture, u, alpha, std, n);
     console.log('Running simulations...');
 
     dataStream.pipe(job);
@@ -142,36 +148,84 @@ module.exports = function(opts, callback){
 
     var resultCounter = 0;
     job.on('data', function (map) {
-      console.log(resultCounter++, 'Maps done...');
-      postProcessing.addMap(map);
-      var mapPP = ignToKml(map, 60, ignitionPt, rows, cols, height, width);
-      fs.writeFileSync('./map_' + resultCounter + '.kml', mapPP['kml'], {encoding: 'utf8'});
-      
-      write2D(JSON.parse(map), rows, cols, './testmap_'+resultCounter+'.map');
+      if ( ++resultCounter % 10 === 0) {
+        console.log(resultCounter, 'Maps done...');
+      }
+      postProcessing.addMap(JSON.parse(map));
+      //write2D(JSON.parse(map), rows, cols, './testmap_'+resultCounter+'.map');
     });
 
     job.on('error', function (err) {
       console.log('-->error:', err);
     });
+
   }
 
+  var kmlMaps = {};
   function postProcessMaps(allMaps){
 
     console.log('Post-processing...');
 
     var finalMaps = postProcessing.process();
 
-    var tf = 60;
-
-    var avg = ignToKml(finalMaps['avg'], tf, ignitionPt, rows, cols, height, width);
-    var udev = ignToKml(finalMaps['udev'], tf, ignitionPt, rows, cols, height, width);
-    var ldev = ignToKml(finalMaps['ldev'], tf, ignitionPt, rows, cols, height, width);
-
-    var kmlMaps = {
-      'avg1h': avg['kml'],
-      'udev1h': udev['kml'],
-      'ldev1h': ldev['kml']
+    var optsIn1 = {
+      data1: finalMaps.udev,
+      rows: rows,
+      cols: cols,
+      height: height,
+      width: width,
+      tf: 120,
+      ignPt: ignitionPt,
+      lineColour: 'ff0055ff',
+      polyColour: 'b30055ff',
+      tag: '1hour Best Case CI95%'
     };
+
+    var optsOut1 = {
+      data1: finalMaps.udev,
+      data2: finalMaps.ldev,
+      rows: rows,
+      cols: cols,
+      height: height,
+      width: width,
+      tf: 120,
+      ignPt: ignitionPt,
+      lineColour: 'ff0000ff',
+      polyColour: 'b30000ff',
+      tag: '1hour Worst Case CI95%'
+    };
+
+    var optsIn2 = {
+      data1: finalMaps.udev,
+      rows: rows,
+      cols: cols,
+      height: height,
+      width: width,
+      tf: 180,
+      ignPt: ignitionPt,
+      lineColour: 'ff0055ff',
+      polyColour: 'b30055ff',
+      tag: '2hour Best Case CI95%'
+    };
+
+    var optsOut2 = {
+      data1: finalMaps.udev,
+      data2: finalMaps.ldev,
+      rows: rows,
+      cols: cols,
+      height: height,
+      width: width,
+      tf: 180,
+      ignPt: ignitionPt,
+      lineColour: 'ff0000ff',
+      polyColour: 'b30000ff',
+      tag: '2hour Worst Case CI95%'
+    };
+
+    kmlMaps.kmlIn1 = ignToKml(optsIn1).kml;
+    kmlMaps.kmlOut1 = ignToKml(optsOut1).kml;
+    kmlMaps.kmlIn2 = ignToKml(optsIn2).kml;
+    kmlMaps.kmlOut2 = ignToKml(optsOut2).kml;
 
     callback(null, kmlMaps);
   }

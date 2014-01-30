@@ -1,4 +1,4 @@
-#Embers demo API 
+#Embers
 
 Embers is a stochastic fire model that runs on top of [CrowdProcess](http://crowdprocess.com) and is written in node.
 We use existing fire models (ie, [firelib](http://www.frames.gov/rcs/0/935.html), [farsite](https://collab.firelab.org/software/projects/farsite/repository/revisions/72/show/branches/api/c++)) which require deterministic input parameters and run monte carlo simulations with probability distribution functions for the input data. This method allows for uncertainty quantification of the solution and, much like probabilistic weather forecast, you end up with a probabilistic fire front forecast.
@@ -10,20 +10,18 @@ The output of this demo are kml files that can be imported to google earth.
 
 ##Install
 
-
 ```
-git clone git@github.com:FireEmbers/demoAPI.git; cd demoAPI; npm install
+git clone git@github.com:FireEmbers/embers.git; cd embers; npm install
 ```
 
 ##Usage
 
-You skip ahead and run a fully functional example with `node example/example.js`.
-
+You can skip ahead and run a fully functional example with `node example/example.js`. You will be producing worst case and best case forecasts based on a 95% confidence interval. Just import the resulting `.kml` files with google earth.
 
 ###Require
 
 ```
-var embers = require('demoAPI');
+var embers = require('embers');
 ```
 ###Define parameters
 
