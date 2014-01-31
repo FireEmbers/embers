@@ -8,8 +8,6 @@ var DataUnitStream = require('./src/dataUnitStream');
 var postProcessing = require('./src/post-processing.js');
 var CrowdProcess = require('crowdprocess');
 
-var write2D = require('./../utils/src/write2D');
-
 var programString = fs.readFileSync(join(__dirname, 'src', 'program.min.js'));
 
 module.exports = function(opts, credentials, callback){
@@ -106,7 +104,6 @@ module.exports = function(opts, credentials, callback){
 
     //Build Run function string from browserify code
     var RunString = getProgram();
-    //fs.writeFileSync('Run.js', RunString, {encoding: 'utf8'});
     var job = crowdProcess({
       program: RunString,
       onResults: postProcessMaps,
