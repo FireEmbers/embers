@@ -7,6 +7,7 @@
 var path = require('path');
 var embers = require('./../index');
 var write2D = require('embersutils').write2D;
+var credentials = require('./../credentials');
 var fs = require('fs');
 
 var opts = {
@@ -22,7 +23,7 @@ var opts = {
   n: 100
 };
 
-embers(opts, function(err, kmlMaps){
+embers(opts, function(err, credentials, kmlMaps){
 
   if (err) throw err;
 
