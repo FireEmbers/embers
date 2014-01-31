@@ -52,11 +52,9 @@ var opts = {
 ###Call Embers
 ```
 embers(opts, function(err, kmlMaps){
-
   if (err) throw err;
 
   for ( var param in kmlMaps ) {
-
     fs.writeFileSync( '' + param + '.kml'), kmlMaps[param], {encoding: 'utf8'});
   }
 
