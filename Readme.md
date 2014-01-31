@@ -32,20 +32,20 @@ var embers = require('embers');
 ```
 ###Define parameters
 
-Every parameter bellow is only an example. Go ahead and you can fiddle with the values 
+Every parameter bellow is only an example. Go ahead and fiddle with the values 
 
 ```
 var opts = {
-  ignitionPt: [41.7718400422817, -7.9167833239285], //[latitude, longitude]
+  ignitionPt: [41.7718400422817, -7.9167833239285], //[latitude, longitude] of ignition point
   u: 2, //mid flame wind speed
   alpha: 115, //wind direction in degrees, clockwise from north
   std: 50, //standard deviation in percentage of average speed
-  moisture: 5, // fuel moisture in percentage 
+  moisture: 5, // fuel moisture in % of total fuel mass
   height: 10000, // Computational domain dimension in km
   width: 10000,
   rows: 200, //Computational resolution size
   cols: 200,
-  n: 100 //
+  n: 100 //Number of Monte Carlo simulations
 };
 ```
 
