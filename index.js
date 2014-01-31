@@ -104,7 +104,7 @@ module.exports = function(opts, credentials, callback){
 
     //Build Run function string from browserify code
     var RunString = getProgram();
-    var job = crowdProcess({
+    var job = crowdprocess({
       program: RunString,
       onResults: postProcessMaps,
       mock:false
