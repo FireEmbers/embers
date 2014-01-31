@@ -62,7 +62,7 @@ embers(opts, function(err, kmlMaps){
 
 ```
 
-##Results
+###Results
 
 The following image show worst case and best case scenarios, respectively in red and orange.
 
