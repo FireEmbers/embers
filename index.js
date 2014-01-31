@@ -2,7 +2,6 @@ var engine = require('embersengine');
 var getGisMap = require('gisClient');
 var cconv = require('cconv');
 var ignToKml = require('ignMapToKml');
-var CrowdProcess = require('crowdprocess')(credentials);
 var fs = require('fs');
 var join = require('path').join;
 var DataUnitStream = require('./src/dataUnitStream');
@@ -13,6 +12,8 @@ var write2D = require('./../utils/src/write2D');
 var programString = fs.readFileSync(join(__dirname, 'src', 'program.min.js'));
 
 module.exports = function(opts, credentials, callback){
+
+  var CrowdProcess = require('crowdprocess')(credentials);
 
   var ignitionPt = opts.ignitionPt;
   var u = opts.u;
