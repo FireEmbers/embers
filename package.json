@@ -1,5 +1,5 @@
 {
-  "name": "Embers",
+  "name": "embers",
   "version": "0.1.0",
   "description": "Stochastic Fire Forecast in CrowdProcess",
   "main": "index.js",
