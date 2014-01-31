@@ -68,7 +68,7 @@ embers(opts, function(err, kmlMaps){
 
 ##Results
 
-The following image show average case, worst case and best case scenarios regarding wind speed variability
+The following image show worst case and best case scenarios, repectvely in red and orange.
 
 ![embersDemo!](https://raw.github.com/FireEmbers/embers/master/example/embers.png)
 
