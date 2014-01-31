@@ -154,7 +154,7 @@ module.exports = function(opts, credentials, callback){
     });
 
     job.on('error', function (err) {
-      console.log('-->error:', err);
+      console.log('-->Job error :', err);
     });
 
   }
