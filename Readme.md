@@ -5,19 +5,17 @@ We use existing fire models (ie, [firelib](http://www.frames.gov/rcs/0/935.html)
 
 You can install this demo and run it using node. Get started by trying the example below.
 
-The output of this demo are kml files that can be imported to google earth.
-
 ##Install
 
 ```
 git clone git@github.com:FireEmbers/embers.git; cd embers; npm install
 ```
 
-##Usage
+##Example
 
 You can skip ahead and run a fully functional example with `node example/example.js`. You will be producing worst case and best case forecasts based on a 95% confidence interval. Just import the resulting `.kml` files with google earth.
 
-##Credentials 
+###Credentials 
 You'll need to register your email in CrowdProcess in order to run the module. Then, just put the registered email and password in the credentials.json file, in the root of the module with the following format:
 
 ```
@@ -34,16 +32,16 @@ var embers = require('embers');
 ```
 ###Define parameters
 
-Every parameter bellow is only an example. Go ahead and you can fidle with the values 
+Every parameter bellow is only an example. Go ahead and you can fiddle with the values 
 
 ```
 var opts = {
   ignitionPt: [41.7718400422817, -7.9167833239285], //[latitude, longitude]
-  u: 2, //mid flame higth
+  u: 2, //mid flame wind speed
   alpha: 115, //wind direction in degrees, clockwise from north
   std: 50, //standard deviation in percentage of average speed
   moisture: 5, // fuel moisture in percentage 
-  height: 10000, // Computational domain dimentions in km
+  height: 10000, // Computational domain dimension in km
   width: 10000,
   rows: 200, //Computational resolution size
   cols: 200,
@@ -68,7 +66,7 @@ embers(opts, function(err, kmlMaps){
 
 ##Results
 
-The following image show worst case and best case scenarios, repectvely in red and orange.
+The following image show worst case and best case scenarios, respectively in red and orange.
 
 ![embersDemo!](https://raw.github.com/FireEmbers/embers/master/example/embers.png)
 
