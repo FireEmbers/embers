@@ -6,6 +6,7 @@ var fs = require('fs');
 var join = require('path').join;
 var DataUnitStream = require('./src/dataUnitStream');
 var postProcessing = require('./src/post-processing.js');
+var CrowdProcess = require('crowdprocess');
 
 var write2D = require('./../utils/src/write2D');
 
@@ -13,7 +14,7 @@ var programString = fs.readFileSync(join(__dirname, 'src', 'program.min.js'));
 
 module.exports = function(opts, credentials, callback){
 
-  var CrowdProcess = require('crowdprocess')(credentials);
+  var crowdprocess = CrowdProcess(credentials);
 
   var ignitionPt = opts.ignitionPt;
   var u = opts.u;
@@ -106,7 +107,7 @@ module.exports = function(opts, credentials, callback){
     //Build Run function string from browserify code
     var RunString = getProgram();
     //fs.writeFileSync('Run.js', RunString, {encoding: 'utf8'});
-    var job = CrowdProcess({
+    var job = crowdProcess({
       program: RunString,
       onResults: postProcessMaps,
       mock:false
