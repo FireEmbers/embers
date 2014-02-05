@@ -150,7 +150,7 @@ module.exports = function(opts, credentials, callback){
         console.log(resultCounter, 'Maps done...');
       }
       postProcessing.addMap(JSON.parse(map));
-      //write2D(JSON.parse(map), rows, cols, './testmap_'+resultCounter+'.map');
+      require('embersutils').write2D(JSON.parse(map), rows, cols, './testmap_'+resultCounter+'.map');
     });
 
     job.on('error', function (err) {
@@ -224,6 +224,9 @@ module.exports = function(opts, credentials, callback){
     kmlMaps.kmlOut1 = ignToKml(optsOut1).kml;
     kmlMaps.kmlIn2 = ignToKml(optsIn2).kml;
     kmlMaps.kmlOut2 = ignToKml(optsOut2).kml;
+    kmlMaps.time1 = optsIn1.tf;
+    kmlMaps.time2 = optsIn2.tf;
+
 
     callback(null, kmlMaps);
   }
