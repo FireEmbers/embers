@@ -1,7 +1,9 @@
-var postProcessing = require('./../src/post-processing.js');
+var PostProcessing = require('./../src/post-processing.js');
 var test = require('tap').test;
 
 test('simple execution', function (t) {
+
+  var postProcessing = new PostProcessing();
 
   var maps =[
     [1, 3, 20],

@@ -5,7 +5,7 @@ var ignToKml = require('ignMapToKml');
 var fs = require('fs');
 var join = require('path').join;
 var DataUnitStream = require('./src/dataUnitStream');
-var postProcessing = require('./src/post-processing.js');
+var PostProcessing = require('./src/post-processing.js');
 var CrowdProcess = require('crowdprocess');
 
 var programString = fs.readFileSync(join(__dirname, 'src', 'program.min.js'));
@@ -13,6 +13,8 @@ var programString = fs.readFileSync(join(__dirname, 'src', 'program.min.js'));
 module.exports = function(opts, credentials, callback){
 
   var crowdprocess = CrowdProcess(credentials);
+
+  var postProcessings = new PostProcessing();
 
   var ignitionPt = opts.ignitionPt;
   var u = opts.u;
@@ -114,7 +116,7 @@ module.exports = function(opts, credentials, callback){
 
       function Run(dataUnit){
 
-        //never mind the path inside the req(), is just a reference for the 
+        //never mind the path inside the req(), it's just a reference for the 
         //browserified module in program.js
         var engine = req('/home/fsousa/src/crp/embers/engine/src/program.js');
 
@@ -136,13 +138,10 @@ module.exports = function(opts, credentials, callback){
     }
 
     //create data unit stream
-    //console.log(moisture, u, alpha, std);
     var dataStream = DataUnitStream(moisture, u, alpha, std, n);
     console.log('Running simulations...');
 
     dataStream.pipe(job);
-
-    //dataStream.on('data', function (data) {console.log(data)});
 
     var resultCounter = 0;
     job.on('data', function (map) {
@@ -150,7 +149,7 @@ module.exports = function(opts, credentials, callback){
         console.log(resultCounter, 'Maps done...');
       }
       postProcessing.addMap(JSON.parse(map));
-      require('embersutils').write2D(JSON.parse(map), rows, cols, './testmap_'+resultCounter+'.map');
+      //require('embersutils').write2D(JSON.parse(map), rows, cols, './testmap_'+resultCounter+'.map');
     });
 
     job.on('error', function (err) {

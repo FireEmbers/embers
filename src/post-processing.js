@@ -1,16 +1,17 @@
 var StatsArray = require('stats-array');
 
-var postProcessing = {
-  maps  : [],
-  avg   : [],
-  ldev  : [],
-  udev  : [],
+function  postProcessing () {
 
-  addMap:  function (map) {
+  this.maps = [];
+  this.avg = [];
+  this.ldev = [];
+  this.udev = [];
+
+  this.addMap =  function (map) {
     this.maps.push(map);
-  },
+  };
 
-  process: function() {
+  this.process = function() {
     var values = [];
     for (var pos = 0; pos < this.maps[0].length; pos++) {
       var array = [];
@@ -30,8 +31,8 @@ var postProcessing = {
       ldev: this.ldev,
       udev: this.udev
     };
-  }
+  };
 
-};
+}
 
 module.exports = postProcessing;
