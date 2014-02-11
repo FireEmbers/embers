@@ -14,7 +14,7 @@ module.exports = function(opts, credentials, callback){
 
   var crowdprocess = CrowdProcess(credentials);
 
-  var postProcessings = new PostProcessing();
+  var postProcessing = new PostProcessing();
 
   var ignitionPt = opts.ignitionPt;
   var u = opts.u;
