@@ -16,14 +16,15 @@ var opts = {
   alpha: 0,
   std: 30,
   moisture: 5,
-  rows: 200,
-  cols: 200,
+  rows: 250,
+  cols: 250,
   height: 10000,
   width: 10000,
-  n: 100
+  n: 100,
+  credentials: credentials
 };
 
-embers(opts, function(err, credentials, kmlMaps){
+embers(opts, function(err, kmlMaps){
 
   if (err) throw err;
 

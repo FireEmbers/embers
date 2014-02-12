@@ -10,9 +10,7 @@ var CrowdProcess = require('crowdprocess');
 
 var programString = fs.readFileSync(join(__dirname, 'src', 'program.min.js'));
 
-module.exports = function(opts, credentials, callback){
-
-  var crowdprocess = CrowdProcess(credentials);
+module.exports = function(opts, callback){
 
   var postProcessing = new PostProcessing();
 
@@ -26,6 +24,8 @@ module.exports = function(opts, credentials, callback){
   var height = opts.height;
   var width = opts.width;
   var n = opts.n;
+
+  var crowdprocess = CrowdProcess(opts.credentials);
 
   console.log('Embers start...');
 
@@ -155,7 +155,6 @@ module.exports = function(opts, credentials, callback){
     job.on('error', function (err) {
       console.log('-->Job error :', err);
     });
-
   }
 
   var kmlMaps = {};
