@@ -7,12 +7,14 @@ var join = require('path').join;
 var DataUnitStream = require('./src/dataUnitStream');
 var PostProcessing = require('./src/post-processing.js');
 var CrowdProcess = require('crowdprocess');
+var PassThrough = require('stream').PassThrough;
 
 var programString = fs.readFileSync(join(__dirname, 'src', 'program.min.js'));
 
 module.exports = function(opts, callback){
 
   var postProcessing = new PostProcessing();
+  var progress = new PassThrough();
 
   var ignitionPt = opts.ignitionPt;
   var u = opts.u;
@@ -76,6 +78,7 @@ module.exports = function(opts, callback){
       if (err) return callback(err, null);
 
       console.log('Got clc maps...');
+      progress.write('m\t');
 
       clcMap = JSON.parse(map);
 
@@ -91,6 +94,7 @@ module.exports = function(opts, callback){
       if (err) return callback(err, null);
 
       console.log('Got terrain maps...');
+      progress.write('m\t');
 
       terrainMaps = JSON.parse(terrainMaps);
 
@@ -149,6 +153,7 @@ module.exports = function(opts, callback){
         console.log(resultCounter, 'Maps done...');
       }
       postProcessing.addMap(JSON.parse(map));
+      progress.write('r\t');
       //require('embersutils').write2D(JSON.parse(map), rows, cols, './testmap_'+resultCounter+'.map');
     });
 
@@ -228,4 +233,6 @@ module.exports = function(opts, callback){
 
     callback(null, kmlMaps);
   }
+
+  return progress;
 };
