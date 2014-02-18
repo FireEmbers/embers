@@ -112,7 +112,6 @@ module.exports = function(opts, callback){
     var RunString = getProgram();
     var job = crowdprocess({
       program: RunString,
-      onResults: postProcessMaps,
       mock:false
     });
 
@@ -160,10 +159,14 @@ module.exports = function(opts, callback){
     job.on('error', function (err) {
       console.log('-->Job error :', err);
     });
+
+    job.on('end', function () {
+      postProcessMaps();
+    });
   }
 
   var kmlMaps = {};
-  function postProcessMaps(allMaps){
+  function postProcessMaps(){
 
     console.log('Post-processing...');
 
@@ -230,8 +233,9 @@ module.exports = function(opts, callback){
     kmlMaps.time1 = optsIn1.tf;
     kmlMaps.time2 = optsIn2.tf;
 
-
-    callback(null, kmlMaps);
+    postProcessing = null;
+    progress.end();
+    return callback(null, kmlMaps);
   }
 
   return progress;
